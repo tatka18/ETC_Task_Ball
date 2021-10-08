@@ -97,12 +97,26 @@ public class Basket implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(color, material, height, diameterOfBase, diameterOfTop, weight, basketVolume);
+        int prime = 31;
+        int result = 1;
+        long temp;
+        result = prime * result + ((color == null) ? 0 : color.hashCode());
+        result = prime * result + ((material == null) ? 0 : material.hashCode());
+        temp = Double.doubleToLongBits(height);
+        result = prime * result + (int)(temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(diameterOfBase);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(diameterOfTop);
+        result = prime * result + (int)(temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(weight);
+        result = prime * result + (int)(temp ^ (temp >>> 32));
+        return result;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + " color='" + color +
+        return getClass().getSimpleName() +
+                " color='" + color +
                 ", material='" + material +
                 ", height='" + height +
                 ", diameterOfBase='" + diameterOfBase +

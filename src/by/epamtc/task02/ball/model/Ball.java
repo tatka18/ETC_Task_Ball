@@ -67,7 +67,17 @@ public class Ball implements Serializable{
 
     @Override
     public int hashCode() {
-        return Objects.hash(color, diameter, weight, volume);
+        int prime = 31;
+        int result = 1;
+        long temp;
+        result = prime * result + ((color == null) ? 0 : color.hashCode());
+        temp = Double.doubleToLongBits(diameter);
+        result = prime * result + (int)(temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(weight);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(volume);
+        result = prime * result + (int)(temp ^ (temp >>> 32));
+        return result;
     }
 
     @Override

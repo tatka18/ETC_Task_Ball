@@ -1,44 +1,18 @@
 package by.epamtc.task02.ball.model;
 
-import java.io.Serializable;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Basket implements Serializable {
+public class Basket{
     private String color;
-    private String material;
     private double height;
     private double diameterOfBase;
     private double diameterOfTop;
     private double weight;
-    private double basketVolume;
+
+    private final List<Ball> ballsList = new ArrayList<>();
 
     public Basket() {
-    }
-
-    public Basket(String color, String material, double height, double diameterOfBase, double diameterOfTop, double weight, double basketVolume) {
-        this.color = color;
-        this.material = material;
-        this.height = height;
-        this.diameterOfBase = diameterOfBase;
-        this.diameterOfTop = diameterOfTop;
-        this.weight = weight;
-        this.basketVolume = basketVolume;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getMaterial() {
-        return material;
-    }
-
-    public void setMaterial(String material) {
-        this.material = material;
     }
 
     public double getHeight() {
@@ -65,6 +39,62 @@ public class Basket implements Serializable {
         this.diameterOfTop = diameterOfTop;
     }
 
+    public List<Ball> getBallsList (){
+        return ballsList;
+    }
+
+    public void setBallsList(Ball ball){
+        if(!isBasketOverload()){
+            ballsList.add(ball);
+        }
+    }
+
+    public double calculateBasketVolume(){
+        return Math.PI * height
+                * Math.pow(calculateRadius(diameterOfBase), 2)
+                + calculateRadius(diameterOfBase) * calculateRadius(diameterOfTop)
+                + Math.pow(calculateRadius(diameterOfTop), 2)
+                / (double) 3;
+    }
+
+    public double calculateBallsCommonVolume(){
+        double volumeCommonBalls = 0;
+        for (Ball ball : ballsList){
+            volumeCommonBalls += ball.calculateBallVolume();
+        }
+        return volumeCommonBalls;
+    }
+
+    public double calculateBallsCommonWeight(){
+        double volumeCommonBalls = 0;
+        for (Ball ball : ballsList){
+            volumeCommonBalls += ball.getWeight();
+        }
+        return volumeCommonBalls;
+    }
+
+    public int countBallsByColor(String color){
+        int countByColor = 0;
+        for (Ball ball : ballsList){
+            if (ball.getColor().equals(color)){
+                countByColor ++;
+            }
+        }
+        return countByColor;
+    }
+
+    public boolean isFullBasket(){
+        return calculateBasketVolume() <= calculateBallsCommonVolume();
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     public double getWeight() {
         return weight;
     }
@@ -73,26 +103,19 @@ public class Basket implements Serializable {
         this.weight = weight;
     }
 
-    public double getBasketVolume() {
-        return basketVolume;
-    }
-
-    public void setBasketVolume(double basketVolume) {
-        this.basketVolume = basketVolume;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Basket basket = (Basket) o;
+        if (color == null) {
+            if (basket.color != null)
+                return false;
+        }
         return Double.compare(basket.height, height) == 0 &&
                 Double.compare(basket.diameterOfBase, diameterOfBase) == 0 &&
                 Double.compare(basket.diameterOfTop, diameterOfTop) == 0 &&
-                Double.compare(basket.weight, weight) == 0 &&
-                Double.compare(basket.basketVolume, basketVolume) == 0 &&
-                Objects.equals(color, basket.color) &&
-                Objects.equals(material, basket.material);
+                Double.compare(basket.weight, weight) == 0;
     }
 
     @Override
@@ -101,7 +124,6 @@ public class Basket implements Serializable {
         int result = 1;
         long temp;
         result = prime * result + ((color == null) ? 0 : color.hashCode());
-        result = prime * result + ((material == null) ? 0 : material.hashCode());
         temp = Double.doubleToLongBits(height);
         result = prime * result + (int)(temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(diameterOfBase);
@@ -117,11 +139,16 @@ public class Basket implements Serializable {
     public String toString() {
         return getClass().getSimpleName() +
                 " color='" + color +
-                ", material='" + material +
                 ", height='" + height +
                 ", diameterOfBase='" + diameterOfBase +
                 ", diameterOfTop='" + diameterOfTop +
-                ", volume=" + basketVolume +
                 ", weight=" + weight;
+    }
+
+    private double calculateRadius(double diameter){
+        return diameter / 2;
+    }
+    private boolean isBasketOverload(){
+        return calculateBasketVolume() < calculateBallsCommonVolume();
     }
 }

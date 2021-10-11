@@ -1,25 +1,16 @@
 package by.epamtc.task02.ball.model;
 
-import java.io.Serializable;
-import java.util.Objects;
-
-public class Ball implements Serializable{
+public class Ball{
     private String color;
     private double diameter;
     private double weight;
-    private double volume;
 
     public Ball(){}
 
-    public Ball(double volume) {
-        this.volume = volume;
-    }
-
-    public Ball(String color, double diameter, double weight, double volume) {
+    public Ball(String color, double diameter, double weight) {
         this.color = color;
         this.diameter = diameter;
         this.weight = weight;
-        this.volume = volume;
     }
 
     public String getColor() {
@@ -46,12 +37,8 @@ public class Ball implements Serializable{
         this.weight = weight;
     }
 
-    public double getVolume() {
-        return volume;
-    }
-
-    public void setVolume(double volume) {
-        this.volume = volume;
+    public double calculateBallVolume(){
+        return 4 * Math.PI * Math.pow(diameter / 2, 3) / (double) 3;
     }
 
     @Override
@@ -59,10 +46,12 @@ public class Ball implements Serializable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ball ball = (Ball) o;
+        if (color == null) {
+            if (ball.color != null)
+                return false;
+        }
         return Double.compare(ball.diameter, diameter) == 0 &&
-                Double.compare(ball.weight, weight) == 0 &&
-                Double.compare(ball.volume, volume) == 0 &&
-                Objects.equals(color, ball.color);
+                Double.compare(ball.weight, weight) == 0;
     }
 
     @Override
@@ -75,8 +64,6 @@ public class Ball implements Serializable{
         result = prime * result + (int)(temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(weight);
         result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(volume);
-        result = prime * result + (int)(temp ^ (temp >>> 32));
         return result;
     }
 
@@ -84,7 +71,6 @@ public class Ball implements Serializable{
     public String toString(){
         return getClass().getSimpleName() + " color = " + color +
                 ", diameter = " + diameter +
-                ", volume = " + volume +
                 ", weight = " + weight;
      }
 }
